@@ -38,7 +38,7 @@ Now you would like to connect to resource server hosting this interface. Using t
 		bearerAccessToken("fake-access-token").
 		build(Resource.class);
 	client = resource.get();
-	ResourceData data = client.getById(42); //Here is the api call made
+	ResourceData data = client.getById(42); //Here is the api call made - GET http://url:port/api/resource/42
 	//Then you can make other calls on client
 	
 	resource.close(); //Remember to close resource after usage (as required by jax-rs client specification)
