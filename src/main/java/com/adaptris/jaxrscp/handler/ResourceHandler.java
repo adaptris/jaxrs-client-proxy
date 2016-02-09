@@ -16,6 +16,7 @@ import com.adaptris.jaxrscp.NameValuePair;
 import com.adaptris.jaxrscp.WebTargetVisitor;
 import com.adaptris.jaxrscp.reflections.EntityDescription;
 import com.adaptris.jaxrscp.reflections.MetaDataReader;
+import com.adaptris.jaxrscp.reflections.MetaDataReaderFactory;
 import com.google.common.base.Optional;
 
 public class ResourceHandler implements InvocationHandler{
@@ -23,21 +24,23 @@ public class ResourceHandler implements InvocationHandler{
 	private final WebTarget target;
 	private final MultivaluedMap<String, Object> headers;
 	private final Class<?> resourceClass;
+	private final MetaDataReaderFactory factory;
 
-	ResourceHandler(Class<?> resourceClass, WebTarget target, MultivaluedMap<String, Object> headers) {
+	ResourceHandler(Class<?> resourceClass, WebTarget target, MultivaluedMap<String, Object> headers, MetaDataReaderFactory factory) {
 		this.target = target;
 		this.headers = headers;
 		this.resourceClass = resourceClass;
+		this.factory = factory;
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-		MetaDataReader reader = new MetaDataReader(resourceClass, method);
+		MetaDataReader reader = this.factory.readerFor(this.resourceClass, method);
 		WebTargetVisitor visitor = new WebTargetVisitor(reader);
 		WebTarget target = visitor.visit(this.target, args);
 		
-		Builder request = target.request();		
+		Builder request = target.request();
 		request.headers(readHeaders(reader, args));
 		
 		String httpMethod = reader.readHttpMethod().or("GET");

@@ -7,11 +7,13 @@ import java.security.PrivilegedAction;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MultivaluedMap;
 
+import com.adaptris.jaxrscp.reflections.MetaDataReaderFactory;
+
 public class ResourceHanlderFactory {
 
 
 	public static <T> T newResource(Class<T> resource, WebTarget target, MultivaluedMap<String, Object> headers) {
-		return createResourceInstance(resource, new ResourceHandler(resource, target, headers));
+		return createResourceInstance(resource, new ResourceHandler(resource, target, headers, new MetaDataReaderFactory()));
 	}
 	
 	@SuppressWarnings("unchecked")
