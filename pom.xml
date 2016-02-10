@@ -116,4 +116,15 @@
 			</plugin>
 		</plugins>
 	</build>
+	
+	<distributionManagement>
+		<repository>
+			<id>adaptris</id>
+			<url>http://development.adaptris.net/nexus/content/repositories/releases</url>
+		</repository>
+		<snapshotRepository>
+			<id>adaptris-snapshots</id>
+			<url>http://development.adaptris.net/nexus/content/repositories/snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
 </project>
