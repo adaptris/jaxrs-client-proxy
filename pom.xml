@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.adaptris</groupId>
 	<artifactId>jaxrs-client-proxy</artifactId>
-	<version>1.0.1</version>
+	<version>1.1.0</version>
 	<name>Jax RS interfaces client proxy</name>
 	<packaging>jar</packaging>
 
@@ -19,8 +19,8 @@
 			<groupId>javax.ws.rs</groupId>
 			<artifactId>javax.ws.rs-api</artifactId>
 			<version>2.0.1</version>
-		</dependency>		
-		
+		</dependency>
+
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
@@ -53,6 +53,26 @@
 			<version>3.1</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.github.tomakehurst</groupId>
+			<artifactId>wiremock</artifactId>
+			<version>1.57</version>
+			<scope>test</scope>
+			<!-- Include everything below here if you have dependency conflicts -->
+			<classifier>standalone</classifier>
+			<exclusions>
+				<exclusion>
+					<groupId>com.google.guava</groupId>
+					<artifactId>guava</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jersey.core</groupId>
+			<artifactId>jersey-client</artifactId>
+			<version>2.22.1</version>
+			<scope>test</scope>
+		</dependency>		
 	</dependencies>
 
 	<build>
@@ -96,4 +116,15 @@
 			</plugin>
 		</plugins>
 	</build>
+	
+	<distributionManagement>
+		<repository>
+			<id>adaptris</id>
+			<url>http://development.adaptris.net/nexus/content/repositories/releases</url>
+		</repository>
+		<snapshotRepository>
+			<id>adaptris-snapshots</id>
+			<url>http://development.adaptris.net/nexus/content/repositories/snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
 </project>

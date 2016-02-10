@@ -47,6 +47,28 @@ Now you would like to connect to resource server hosting this interface. Using t
 
 ```
 
+#### Instalation
+
+```xml
+...
+	<depndency>
+		<groupId>com.adaptris</groupId>
+		<artifactId>jaxrs-client-proxy</artifactId>
+		<version>${jaxrscp.version}</version>
+	</dependency>
+...
+    <repositories>
+        <repository>
+            <id>adaptris-releases</id>
+            <url>http://development.adaptris.net/nexus/content/repositories/releases</url>
+        </repository>
+        <repository>
+            <id>adaptris-snapshots</id>
+            <url>http://development.adaptris.net/nexus/content/repositories/snapshots</url>
+        </repository>
+	</repositories>
+```
+
 #### Dependencies
 - java 1.7
 - google-guava
@@ -59,6 +81,7 @@ Now you would like to connect to resource server hosting this interface. Using t
 - `@BeanParam` - not supported yet
 
 #### What next?
-- caching of reflection data reading
+- Publishing to repository and better maven versions management
+- Exceptions handling for 4xx and 5xx statuses
 - `@FormParam` support
 - `@BeanParam` support

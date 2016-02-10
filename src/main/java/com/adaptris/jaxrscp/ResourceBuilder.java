@@ -1,6 +1,8 @@
 package com.adaptris.jaxrscp;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -13,7 +15,6 @@ import com.google.common.net.HttpHeaders;
 
 public class ResourceBuilder {	
 
-	private String accessToken;
 	private String url;
 	private MultivaluedHashMap<String, Object> headers = new MultivaluedHashMap<>();
 	
@@ -23,7 +24,7 @@ public class ResourceBuilder {
 	}
 
 	public ResourceBuilder bearerAccessToken(String token) {
-		Object accessTokenHeader = "Bearer " + accessToken;
+		Object accessTokenHeader = "Bearer " + token;
 		return putHeader(HttpHeaders.AUTHORIZATION, accessTokenHeader);
 	}
 	
@@ -34,12 +35,17 @@ public class ResourceBuilder {
 	 * @return
 	 */
 	public ResourceBuilder addHeader(String header, Object value) {
-		headers.add(header, value);
+		List<Object> list = headers.get(header);
+		if (list == null) {
+			list = new ArrayList<>();
+			headers.put(header, list);
+		}
+		list.add(value);
 		return this;
 	}
 	
 	public ResourceBuilder putHeader(String header, Object value) {
-		headers.put(header, Arrays.asList(value));
+		headers.put(header, new ArrayList<>(Arrays.asList(value)));
 		return this;
 	}
 	

@@ -44,7 +44,7 @@ public class MetaDataReader implements Serializable{
 	private final Method method;
 	private final Class<?> clazz;
 	
-	public MetaDataReader(Class<?> resourceClass, Method method) {
+	MetaDataReader(Class<?> resourceClass, Method method) {
 		this.method = method;
 		this.clazz = resourceClass;
 	}
