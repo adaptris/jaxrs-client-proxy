@@ -53,7 +53,7 @@ public class ResourceHandler implements InvocationHandler{
 				entity = new GenericEntity(entity, description.getType());
 			}
             result = request.method(httpMethod, Entity.entity(entity, reader.readContentType().get()[0]), reader.readResponseType());
-		} else {			
+		} else {
 			result = request.method(httpMethod, reader.readResponseType());
 		}		
 		return result;
