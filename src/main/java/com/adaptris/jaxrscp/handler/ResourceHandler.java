@@ -61,7 +61,7 @@ public class ResourceHandler implements InvocationHandler{
 	}
 
 	private String readContentType(MetaDataReader reader) {
-		Optional<Object> header = Optional.of(this.headers.getFirst(HttpHeaders.CONTENT_TYPE));
+		Optional<Object> header = Optional.fromNullable(this.headers.getFirst(HttpHeaders.CONTENT_TYPE));
 		if(header.isPresent()) return (String) header.get();
 		
 		return reader.readContentType().get()[0];
