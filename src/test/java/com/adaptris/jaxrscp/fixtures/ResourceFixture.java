@@ -11,8 +11,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
-@Produces("application/json")
-@Consumes({"application/json", "text/xml"})
+@Produces({"application/xml","application/json"})
+@Consumes({"application/xml","application/json", "text/xml"})
 @Path("/test")
 public interface ResourceFixture extends GenericResourceFixture<Integer, String> {
 
