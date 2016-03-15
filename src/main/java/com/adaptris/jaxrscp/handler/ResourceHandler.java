@@ -53,14 +53,14 @@ public class ResourceHandler implements InvocationHandler{
 			if (description.getType() instanceof ParameterizedType) {				
 				entity = new GenericEntity(entity, description.getType());
 			}
-            result = request.method(httpMethod, Entity.entity(entity, readContentType(request, reader)), reader.readResponseType());
+            result = request.method(httpMethod, Entity.entity(entity, readContentType(reader)), reader.readResponseType());
 		} else {
 			result = request.method(httpMethod, reader.readResponseType());
 		}		
 		return result;
 	}
 
-	private String readContentType(Builder request, MetaDataReader reader) {
+	private String readContentType(MetaDataReader reader) {
 		Optional<Object> header = Optional.of(this.headers.getFirst(HttpHeaders.CONTENT_TYPE));
 		if(header.isPresent()) return (String) header.get();
 		
