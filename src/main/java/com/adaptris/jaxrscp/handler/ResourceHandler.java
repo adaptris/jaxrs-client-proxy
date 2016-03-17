@@ -5,10 +5,11 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
-import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericEntity;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 
@@ -52,11 +53,18 @@ public class ResourceHandler implements InvocationHandler{
 			if (description.getType() instanceof ParameterizedType) {				
 				entity = new GenericEntity(entity, description.getType());
 			}
-            result = request.method(httpMethod, Entity.entity(entity, reader.readContentType().get()[0]), reader.readResponseType());
+            result = request.method(httpMethod, Entity.entity(entity, readContentType(reader)), reader.readResponseType());
 		} else {
 			result = request.method(httpMethod, reader.readResponseType());
 		}		
 		return result;
+	}
+
+	private String readContentType(MetaDataReader reader) {
+		Optional<Object> header = Optional.fromNullable(this.headers.getFirst(HttpHeaders.CONTENT_TYPE));
+		if(header.isPresent()) return (String) header.get();
+		
+		return reader.readContentType().get()[0];
 	}
 	
 	private MultivaluedMap<String, Object> readHeaders(MetaDataReader reader, Object[] args) {

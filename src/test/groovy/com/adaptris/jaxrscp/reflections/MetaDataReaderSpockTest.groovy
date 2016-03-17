@@ -56,8 +56,8 @@ class MetaDataReaderSpockTest extends Specification {
 		where:
 		method						| parameters		| contentType
 		"xmlReader"					| null				| ["text/xml"] as String[]
-		"header"					| [String]			| ["application/json", "text/xml"] as String[]
-		"get"						| [Object]			| ["application/json", "text/xml"] as String[]
+		"header"					| [String]			| ["application/xml", "application/json", "text/xml"] as String[]
+		"get"						| [Object]			| ["application/xml", "application/json", "text/xml"] as String[]
 	}
 	
 	
@@ -73,8 +73,8 @@ class MetaDataReaderSpockTest extends Specification {
 		where:
 		method						| parameters		| accept
 		"xmlReader"					| null				| ["text/xml"] as String[]
-		"header"					| [String]			| ["application/json"] as String[]
-		"get"						| [Object]			| ["application/json"] as String[]
+		"header"					| [String]			| ["application/xml", "application/json"] as String[]
+		"get"						| [Object]			| ["application/xml", "application/json"] as String[]
 	}
 	
 	def "Reader reads header param value of parameters"() {
