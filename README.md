@@ -81,7 +81,6 @@ Now you would like to connect to resource server hosting this interface. Using t
 - `@BeanParam` - not supported yet
 
 #### What next?
-- Publishing to repository and better maven versions management
 - Exceptions handling for 4xx and 5xx statuses
 - `@FormParam` support
 - `@BeanParam` support
