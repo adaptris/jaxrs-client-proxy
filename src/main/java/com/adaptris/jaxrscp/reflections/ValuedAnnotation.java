@@ -11,11 +11,11 @@ import com.google.common.base.Optional;
  * Read value() of annotation not knowing exact type of it.
  * Apparently even 95% annotations in java have value() attribute there is no easy way
  * to get it not having the exact type of annotation annotation.
- * So this class use reflection to execute the value() of annotation. In case there is no value empty Option<> is returned.
+ * So this class use reflection to execute the value() of annotation. In case there is no value empty Option is returned.
  * 
  * @author irla
  *
- * @param <T>
+ * @param T type of value - usually String
  */
 public class ValuedAnnotation<T> {
 	

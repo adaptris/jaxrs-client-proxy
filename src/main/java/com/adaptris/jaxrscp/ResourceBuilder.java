@@ -30,9 +30,9 @@ public class ResourceBuilder {
 	
 	/**
 	 * Adds to existing or creates header
-	 * @param header
-	 * @param value
-	 * @return
+	 * @param header header name
+	 * @param value value of header
+	 * @return this
 	 */
 	public ResourceBuilder addHeader(String header, Object value) {
 		List<Object> list = headers.get(header);

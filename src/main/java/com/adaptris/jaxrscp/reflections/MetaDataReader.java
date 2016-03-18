@@ -3,7 +3,6 @@ package com.adaptris.jaxrscp.reflections;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -50,7 +49,7 @@ public class MetaDataReader implements Serializable{
 	}
 	
 	/**
-	 * @return 
+	 * @return http method POST, GET, PUT...
 	 */
 	public Optional<String> readHttpMethod() {
 		if (httpMethod == null) {
