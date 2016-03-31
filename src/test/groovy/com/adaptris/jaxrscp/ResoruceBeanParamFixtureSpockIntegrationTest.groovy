@@ -35,25 +35,45 @@ class ResoruceBeanParamFixtureSpockIntegrationTest extends Specification{
 
 	def "It handles BeanParam parameters mixed with header param argument" () {
 		given:
-		def paramHandler = new ParamHandler();
-		paramHandler.headerParam = "BeanParam-Header-Value"
-		paramHandler.pathParam = "BeanParam-Path-Value"
-		paramHandler.queryParam = "BeanParam-Query-Value"
-		paramHandler.matrixParam = "BeanParam-Matrix-Value"		
-		paramHandler.headerParam2 = "Header 1 value2"
-		
-		def header1 = "Method Header"
-		wireMockRule.stubFor(
-			post(urlEqualTo("/api/test/beanParam;matrixParamAV=BeanParam-Matrix-Value?queryParamAV=$paramHandler.queryParam"))
-			.willReturn(aResponse().withStatus(200)))
+			def parameter = new Parameter();
+			parameter.headerParam = "BeanParam-Header-Value"
+			parameter.pathParam = "BeanParam-Path-Value"
+			parameter.queryParam = "BeanParam-Query-Value"
+			parameter.matrixParam = "BeanParam-Matrix-Value"		
+			parameter.headerParam2 = "Header 1 value2"
+			
+			def header1 = "Method Header"
+			wireMockRule.stubFor(
+				post(urlEqualTo("/api/test/beanParam;matrixParamAV=BeanParam-Matrix-Value?queryParamAV=$parameter.queryParam"))
+				.willReturn(aResponse().withStatus(200)))
 
 		when:
-		client.beanParam(paramHandler, header1)
+			client.beanParam(parameter, header1)
 
 		then:
-		verify(1,
-				postRequestedFor(urlEqualTo("/api/test/beanParam;matrixParamAV=BeanParam-Matrix-Value?queryParamAV=$paramHandler.queryParam"))
+			verify(1,
+				postRequestedFor(urlEqualTo("/api/test/beanParam;matrixParamAV=BeanParam-Matrix-Value?queryParamAV=$parameter.queryParam"))
 				.withHeader("Content-Type", equalTo("BeanParam-Header-Value"))
+				.withHeader("Header-2", equalTo("Method Header"))
+				)
+	}
+	
+	def "If the same param is set in method and Bean then take method param" () {
+		given:
+			def parameter = new Parameter();
+			parameter.headerParam2 = "Bean Param Header2"
+			
+			def header = "Method Header"
+			wireMockRule.stubFor(
+				post(urlEqualTo("/api/test/beanParam"))
+				.willReturn(aResponse().withStatus(200)))
+
+		when:
+			client.beanParam(parameter, header)
+
+		then:
+			verify(1,
+				postRequestedFor(urlEqualTo("/api/test/beanParam"))
 				.withHeader("Header-2", equalTo("Method Header"))
 				)
 	}

@@ -47,11 +47,14 @@ public class MetaDataReader implements Serializable {
 	private final Method method;
 	private final Class<?> clazz;
 
-	MetaDataReader(Class<?> resourceClass, Method method) {
+	private final BeanParamValueSearcher beanParamValueSearcher = new BeanParamValueSearcher();
+
+	MetaDataReader(Class<?> resourceClass, Method method, BeanParamMetaDataCache beanParamCache) {
 		this.method = method;
 		this.clazz = resourceClass;
-		List<NameValuePair<Integer>> beanspositions = readPositions(BeanParam.class);
-		parametersPositions.put(BeanParam.class, beanspositions);
+		parametersPositions.put(BeanParam.class, readPositions(BeanParam.class));
+		beanParamValueSearcher.setCache(beanParamCache);
+		
 	}
 
 	/**
@@ -164,9 +167,9 @@ public class MetaDataReader implements Serializable {
 			positions = readPositions(annotation);
 			parametersPositions.put(annotation, positions);
 		}
-
 		List<NameValuePair<Object>> headers = readValues(positions, args);
-		headers.addAll(readInBeanParams(annotation, args));
+		
+		headers.addAll(beanParamValueSearcher.read(annotation, args, parametersPositions.get(BeanParam.class)));
 		return headers;
 	}
 
@@ -192,29 +195,6 @@ public class MetaDataReader implements Serializable {
 
 	
 	
-	
-	public List<NameValuePair<Object>> readInBeanParams(Class<? extends Annotation> annotation, Object[] args) {
-		List<NameValuePair<Object>> parameters = new ArrayList<>();
-		List<NameValuePair<Integer>> positions = parametersPositions.get(BeanParam.class);
-		for (NameValuePair<Integer> nameValuePair : positions) {
-			Object beanparam = args[nameValuePair.getValue()];
-			Field[] fields = MetaDataReader.getAnnotatedDeclaredFields(beanparam.getClass(), annotation, false);
-			for (Field field : fields) {
-				try {
-					field.setAccessible(true);
-					ValuedAnnotation<String> va = new ValuedAnnotation<>(field.getAnnotation(annotation));
-					if(va.value().isPresent()){
-						parameters.add(new NameValuePair<Object>(va.value().get(), field.get(beanparam)));
-					}
-				} catch (IllegalArgumentException | IllegalAccessException e) {
-					throw new RuntimeException(e);
-				} 
-			}
-			
-		}
-		
-		return parameters;
-	}
 
 	
 	private boolean containsParamAnnotation(Annotation[] annotations) {
@@ -266,29 +246,29 @@ public class MetaDataReader implements Serializable {
 		return responseType;
 	}
 
-	public static Field[] getAnnotatedDeclaredFields(@SuppressWarnings("rawtypes") Class clazz, Class<? extends Annotation> annotationClass, boolean recursively) {
-		Field[] allFields = getDeclaredFields(clazz, recursively);
+	public static List<Field> getAnnotatedDeclaredFields(@SuppressWarnings("rawtypes") Class clazz, Class<? extends Annotation> annotationClass, boolean recursively) {
+		List<Field> allFields = getDeclaredFields(clazz, recursively);
 		List<Field> annotatedFields = new LinkedList<Field>();
 		for (Field field : allFields) {
 			if (field.isAnnotationPresent(annotationClass))
 				annotatedFields.add(field);
 		}
 
-		return annotatedFields.toArray(new Field[annotatedFields.size()]);
+		return annotatedFields;
 	}
 
 	@SuppressWarnings("rawtypes")
-	public static Field[] getDeclaredFields(Class clazz, boolean recursively) {
+	public static List<Field> getDeclaredFields(Class clazz, boolean recursively) {
 		List<Field> fields = new LinkedList<Field>();
 		Field[] declaredFields = clazz.getDeclaredFields();
 		Collections.addAll(fields, declaredFields);
 		Class superClass = clazz.getSuperclass();
 		if (superClass != null && recursively) {
-			Field[] declaredFieldsOfSuper = getDeclaredFields(superClass, recursively);
-			if (declaredFieldsOfSuper.length > 0)
-				Collections.addAll(fields, declaredFieldsOfSuper);
+			List<Field> declaredFieldsOfSuper = getDeclaredFields(superClass, recursively);
+			if (!declaredFieldsOfSuper.isEmpty())
+				fields.addAll(declaredFieldsOfSuper);
 		}
-		return fields.toArray(new Field[fields.size()]);
+		return fields;
 	}
 	
 

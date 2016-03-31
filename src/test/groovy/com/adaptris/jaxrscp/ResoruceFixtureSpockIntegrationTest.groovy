@@ -1,18 +1,17 @@
 package com.adaptris.jaxrscp
 
-import org.junit.Rule
-
-import com.adaptris.jaxrscp.fixtures.ResourceFixture;
-import com.github.tomakehurst.wiremock.junit.WireMockRule
-import com.google.common.net.HttpHeaders;
-import com.sun.security.ntlm.Client;
-
 import static com.github.tomakehurst.wiremock.client.WireMock.*
 
-import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MediaType
+
+import org.junit.Rule
 
 import spock.lang.Specification
 import spock.lang.Unroll
+
+import com.adaptris.jaxrscp.fixtures.ResourceFixture
+import com.github.tomakehurst.wiremock.junit.WireMockRule
+import com.google.common.net.HttpHeaders
 
 @Unroll
 class ResoruceFixtureSpockIntegrationTest extends Specification{

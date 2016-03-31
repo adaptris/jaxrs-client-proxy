@@ -12,7 +12,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
-import com.adaptris.jaxrscp.ParamHandler;
+import com.adaptris.jaxrscp.Parameter;
 
 @Produces({"application/xml","application/json"})
 @Consumes({"application/xml","application/json", "text/xml"})
@@ -56,7 +56,7 @@ public interface ResourceFixture extends GenericResourceFixture<Integer, String>
 	@POST
 	@Path("/beanParam")
 	public void beanParam(
-			@BeanParam ParamHandler paramHandler,
+			@BeanParam Parameter paramHandler,
 			@HeaderParam("Header-2") String header2
 	);
 }
