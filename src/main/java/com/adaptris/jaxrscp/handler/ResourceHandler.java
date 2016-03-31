@@ -27,11 +27,11 @@ public class ResourceHandler implements InvocationHandler{
 	private final Class<?> resourceClass;
 	private final MetaDataReaderFactory factory;
 
-	ResourceHandler(Class<?> resourceClass, WebTarget target, MultivaluedMap<String, Object> headers, MetaDataReaderFactory factory) {
+	ResourceHandler(Class<?> resourceClass, WebTarget target, MultivaluedMap<String, Object> headers) {
 		this.target = target;
 		this.headers = headers;
 		this.resourceClass = resourceClass;
-		this.factory = factory;
+		this.factory = new MetaDataReaderFactory();
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })

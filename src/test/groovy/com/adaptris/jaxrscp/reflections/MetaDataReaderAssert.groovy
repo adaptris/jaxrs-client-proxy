@@ -14,7 +14,7 @@ class MetaDataReaderAssert {
 		if (parameters != null) {
 			params = parameters as Class[]
 		}
-		reader = new MetaDataReader(clazz, findMethod(clazz, methodName, params).get())
+		reader = new MetaDataReader(clazz, findMethod(clazz, methodName, params).get(), null)
 	}
 	
 	def get() { reader } 

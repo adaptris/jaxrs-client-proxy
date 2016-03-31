@@ -1,5 +1,6 @@
 package com.adaptris.jaxrscp.fixtures;
 
+import javax.ws.rs.BeanParam;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -10,6 +11,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+
+import com.adaptris.jaxrscp.Parameter;
 
 @Produces({"application/xml","application/json"})
 @Consumes({"application/xml","application/json", "text/xml"})
@@ -47,5 +50,13 @@ public interface ResourceFixture extends GenericResourceFixture<Integer, String>
 		@FormParam("form1") String form1,
 		@PathParam("path1") Integer path1,
 		@FormParam("form2") String form2
+	);
+	
+	
+	@POST
+	@Path("/beanParam")
+	public void beanParam(
+			@BeanParam Parameter paramHandler,
+			@HeaderParam("Header-2") String header2
 	);
 }
