@@ -1,4 +1,4 @@
-package com.adaptris.jaxrscp;
+package com.adaptris.jaxrscp.fixtures;
 
 import javax.ws.rs.HeaderParam;
 
