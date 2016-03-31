@@ -6,12 +6,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.adaptris.jaxrscp.NameValuePair;
 
 public class BeanParamValueSearcher {
-	Logger log = Logger.getLogger(BeanParamValueSearcher.class.toString());
+	Logger logger = Logger.getLogger(BeanParamValueSearcher.class.toString());
 	
 	private static BeanParamMetaDataCache cache = null;
 
@@ -44,7 +45,7 @@ public class BeanParamValueSearcher {
 
 			}
 		} catch (ExecutionException | IllegalArgumentException | IllegalAccessException e) {
-			log.severe("error");
+			logger.log(Level.SEVERE,"Bean Param meta data read failed ", e);
 		}
 	}
 }
