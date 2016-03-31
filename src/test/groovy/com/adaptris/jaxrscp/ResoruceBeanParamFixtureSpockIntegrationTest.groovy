@@ -7,6 +7,7 @@ import org.junit.Rule
 import spock.lang.Specification
 import spock.lang.Unroll
 
+import com.adaptris.jaxrscp.fixtures.Parameter;
 import com.adaptris.jaxrscp.fixtures.ResourceFixture
 import com.github.tomakehurst.wiremock.junit.WireMockRule
 

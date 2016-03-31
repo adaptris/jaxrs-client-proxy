@@ -1,14 +1,12 @@
-package com.adaptris.jaxrscp;
+package com.adaptris.jaxrscp.fixtures;
 
-import javax.ws.rs.HeaderParam;
 import javax.ws.rs.MatrixParam;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 
-public class ParamHandler {
+import com.adaptris.jaxrscp.HeaderParameter;
 
-	@HeaderParam("Content-Type")
-	private String headerParam;
+public class Parameter extends HeaderParameter{
 
 	@PathParam("pathParamAV")
 	private String pathParam;
@@ -19,7 +17,5 @@ public class ParamHandler {
 	@MatrixParam("matrixParamAV")
 	private String matrixParam;
 	
-	@HeaderParam("Header-2")
-	private String headerParam2;
 
 }
