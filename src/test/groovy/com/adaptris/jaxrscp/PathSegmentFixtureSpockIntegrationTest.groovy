@@ -71,7 +71,34 @@ class PathSegmentFixtureSpockIntegrationTest extends Specification{
 					)
 	}
 
+	def "Path attribute encoding with PathSegment object"() {
+		given:
+			def url =  "/api/test/lookup/Company%201;country=PL;code=ABC;category=Soil_Type/Company2;category=Soil%20Type"
+			setupStub(url)
+			
+			CompanyAttributes sourceCompany = new CompanyAttributes();
+			sourceCompany.path = "Company 1"
+		
+			sourceCompany.matrixParameters.add("country","PL")
+			sourceCompany.matrixParameters.add("code","ABC")
+			sourceCompany.matrixParameters.add("category","Soil_Type")
+			
+			CompanyAttributes targetCompany = new CompanyAttributes();
+			targetCompany.path = "Company2"
+			targetCompany.matrixParameters.add("category","Soil Type")
+			
 
+		when:
+			def putResponse = client.lookup(sourceCompany, targetCompany);
+			
+
+		then:
+			putResponse == "get_response"
+			verify(1,
+					getRequestedFor(urlEqualTo(url))
+					)
+	}
+	
 	private setupStub(String url) {
 		wireMockRule.stubFor(
 				get(urlEqualTo(url))

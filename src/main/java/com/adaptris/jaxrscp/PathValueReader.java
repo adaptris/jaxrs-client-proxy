@@ -1,8 +1,10 @@
 package com.adaptris.jaxrscp;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.List;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.ws.rs.core.PathSegment;
@@ -18,7 +20,14 @@ public class PathValueReader {
 			sb.append(entry.getValue().stream().map(i -> i.toString()).collect(Collectors.joining("")));
 			sb.append(";");
 		}
-		return sb.toString().replaceAll(";+$", "");
+		
+		String params = sb.toString().replaceAll(";+$", "");
+		try {
+			params = URLDecoder.decode(params, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
+		}
+		return params;
 	}
 
 	public static boolean isPathSegment(Object pairValue) {
