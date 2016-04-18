@@ -167,10 +167,10 @@ public class MetaDataReader implements Serializable {
 			positions = readPositions(annotation);
 			parametersPositions.put(annotation, positions);
 		}
-		List<NameValuePair<Object>> headers = readValues(positions, args);
+		List<NameValuePair<Object>> values = readValues(positions, args);
 		
-		headers.addAll(beanParamValueSearcher.read(annotation, args, parametersPositions.get(BeanParam.class)));
-		return headers;
+		values.addAll(beanParamValueSearcher.read(annotation, args, parametersPositions.get(BeanParam.class)));
+		return values;
 	}
 
 	public List<NameValuePair<Object>> readHeaderParams(Object[] args) {

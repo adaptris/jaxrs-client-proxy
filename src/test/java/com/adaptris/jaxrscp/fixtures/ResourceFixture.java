@@ -11,6 +11,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.PathSegment;
 
 @Produces({"application/xml","application/json"})
 @Consumes({"application/xml","application/json", "text/xml"})
@@ -56,5 +57,12 @@ public interface ResourceFixture extends GenericResourceFixture<Integer, String>
 	public void beanParam(
 			@BeanParam Parameter paramHandler,
 			@HeaderParam("Header-2") String header2
+	);
+	
+	@GET
+	@Path("/lookup/{sourceCompany}/{targetCompany}")
+	public String lookup(
+		@PathParam("sourceCompany") PathSegment sourceCompany,
+		@PathParam("targetCompany") PathSegment targetCompany
 	);
 }

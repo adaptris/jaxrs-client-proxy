@@ -35,6 +35,16 @@ public class WebTargetVisitor {
 	private WebTarget visitPathParams(WebTarget target, Object[] methodArgs) {
 		List<NameValuePair<Object>> readPathParams = reader.readPathParams(methodArgs);
 		for (NameValuePair<Object> pair : readPathParams) {
+			target = resolveTemplate(target, pair);
+		}
+		return target;
+	}
+
+	private WebTarget resolveTemplate(WebTarget target, NameValuePair<Object> pair) {
+		if(PathValueReader.isPathSegment(pair.getValue())){
+			target = target.resolveTemplateFromEncoded(pair.getName(), PathValueReader.read(pair.getValue()));
+		}
+		else{
 			target = target.resolveTemplate(pair.getName(), pair.getValue());
 		}
 		return target;
