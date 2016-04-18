@@ -1,11 +1,8 @@
 package com.adaptris.jaxrscp;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.ws.rs.core.PathSegment;
 
@@ -14,20 +11,21 @@ public class PathValueReader {
 	public static String read(Object pairValue) {
 		PathSegment segment = (PathSegment) pairValue;
 		StringBuffer sb = new StringBuffer(segment.getPath()).append(";");
-		Set<Entry<String, List<String>>> values = segment.getMatrixParameters().entrySet();
-		for (Entry<String, List<String>> entry : values) {
-			sb.append(entry.getKey()).append("=");
-			sb.append(entry.getValue().stream().map(i -> i.toString()).collect(Collectors.joining("")));
-			sb.append(";");
+		Set<Entry<String, List<String>>> matrixParameters = segment.getMatrixParameters().entrySet();
+		for (Entry<String, List<String>> parameter : matrixParameters) {
+			List<String> parameterValues = parameter.getValue();
+			for (String value : parameterValues) {
+				sb.append(parameter.getKey())
+				.append("=")
+				.append(value)
+				.append(";");
+			}
 		}
-		
-		String params = sb.toString().replaceAll(";+$", "");
-		try {
-			params = URLDecoder.decode(params, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException(e);
-		}
-		return params;
+		return removeLastSpecialChar(sb);
+	}
+
+	private static String removeLastSpecialChar(StringBuffer sb) {
+		return sb.substring(0, sb.length() - 1);
 	}
 
 	public static boolean isPathSegment(Object pairValue) {
