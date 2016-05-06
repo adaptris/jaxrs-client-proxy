@@ -7,41 +7,47 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 
-public class MetaDataReaderFactory{
-	
+public class MetaDataReaderFactory {
+
 	private static LoadingCache<MetaDataReaderKey, MetaDataReader> cache;
+	private static BeanParamMetaDataCache beanParamMetaDataCache = null;
 
-
+	public MetaDataReaderFactory() {
+		MetaDataReaderFactory.beanParamMetaDataCache = new BeanParamMetaDataCache();
+	}
+	
 	public MetaDataReader readerFor(Class<?> clazz, Method method) throws ExecutionException {
 		return getCacheInstance().get(new MetaDataReaderKey(clazz, method));
 	}
-	
+
 	private static LoadingCache<MetaDataReaderKey, MetaDataReader> getCacheInstance() {
 		if (cache == null) {
-			cache = CacheBuilder
-					.newBuilder()
-					// We could put some options for idle and maximum size but we want it all to resist in memory as
-					// amount of data stored should be small
+			cache = CacheBuilder.newBuilder()
+					// We could put some options for idle and maximum size but we want it all to resist in memory as amount of data stored should be small
 					.build(new CacheLoader<MetaDataReaderKey, MetaDataReader>() {
 						@Override
 						public MetaDataReader load(MetaDataReaderKey key) throws Exception {
-							return new MetaDataReader(key.clazz, key.method);
-						}					
-				});
+							return new MetaDataReader(key.clazz, key.method, beanParamMetaDataCache);
+						}
+					});
 		}
 		return cache;
 	}
+
 	
 	
+	/**
+	 * Cache Key Class
+	 */
 	private static final class MetaDataReaderKey {
 		final Class<?> clazz;
 		final Method method;
-		
+
 		public MetaDataReaderKey(Class<?> clazz, Method method) {
 			this.clazz = clazz;
 			this.method = method;
 		}
-		
+
 		@Override
 		public int hashCode() {
 			final int prime = 31;
@@ -60,8 +66,8 @@ public class MetaDataReaderFactory{
 				return false;
 			}
 			return clazz.equals(other.clazz);
-		}	
-		
+		}
+
 	}
 
 }
