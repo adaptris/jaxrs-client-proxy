@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Form;
 
 import com.adaptris.jaxrscp.reflections.MetaDataReader;
 import com.google.common.base.Optional;
@@ -71,6 +72,22 @@ public class WebTargetVisitor {
 			return ((Collection) obj).toArray();
 		}
 		return obj;
+	}
+
+	public Optional<Form> readForm(Object[] args) {
+		List<NameValuePair<Object>> readFormParams = this.reader.readFormParams(args);
+		if (! readFormParams.isEmpty()) {
+			Form form = new Form();
+			for (NameValuePair<Object> nameValuePair : readFormParams) {
+				String value = null;
+				if (nameValuePair.getValue() != null) {
+					value = nameValuePair.getValue().toString();
+				}
+				form.param(nameValuePair.getName(), value);
+			}
+			return Optional.of(form);
+		}
+		return Optional.absent();
 	}
 
 }

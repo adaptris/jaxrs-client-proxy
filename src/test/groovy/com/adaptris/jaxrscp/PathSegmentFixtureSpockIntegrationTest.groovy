@@ -44,48 +44,50 @@ class PathSegmentFixtureSpockIntegrationTest extends Specification{
 	
 	
 	def "Path attribute with PathSegment object handled properly"() {
-		given:
-			def url =  "/api/test/lookup/Company1;country=PL;code=ABC;category=Soil_Type/Company2;category=Soil_Type"
-			setupStub(url)
-			
-			CompanyAttributes sourceCompany = new CompanyAttributes();
+		given:			
+			CompanyAttributes sourceCompany = new CompanyAttributes()
 			sourceCompany.path = "Company1"
 		
 			sourceCompany.matrixParameters.add("country","PL")
 			sourceCompany.matrixParameters.add("code","ABC")
 			sourceCompany.matrixParameters.add("category","Soil_Type")
+			def sourceSegment = buildSegment(sourceCompany)
 			
-			CompanyAttributes targetCompany = new CompanyAttributes();
+			CompanyAttributes targetCompany = new CompanyAttributes()
 			targetCompany.path = "Company2"
 			targetCompany.matrixParameters.add("category","Soil_Type")
+			def targetSegment = buildSegment(targetCompany)
 			
+			def url =  "/api/test/lookup/$sourceSegment/$targetSegment"
+			setupStub(url)
 
 		when:
-			def putResponse = client.lookup(sourceCompany, targetCompany);
-			
+			def putResponse = client.lookup(sourceCompany, targetCompany)		
 
 		then:
 			putResponse == "get_response"
 			verify(1,
-					getRequestedFor(urlEqualTo(url))
-					)
+				getRequestedFor(urlEqualTo(url))
+				)
 	}
 
 	def "Path attribute encoding with PathSegment object"() {
-		given:
-			def url =  "/api/test/lookup/Company%201;country=PL;code=ABC;category=Soil_Type/Company2;category=Soil%20Type"
-			setupStub(url)
-			
-			CompanyAttributes sourceCompany = new CompanyAttributes();
+		given:					
+			CompanyAttributes sourceCompany = new CompanyAttributes()
 			sourceCompany.path = "Company 1"
 		
 			sourceCompany.matrixParameters.add("country","PL")
 			sourceCompany.matrixParameters.add("code","ABC")
 			sourceCompany.matrixParameters.add("category","Soil_Type")
+			def sourceSegment = buildSegment(sourceCompany)
 			
-			CompanyAttributes targetCompany = new CompanyAttributes();
+			CompanyAttributes targetCompany = new CompanyAttributes()
 			targetCompany.path = "Company2"
 			targetCompany.matrixParameters.add("category","Soil Type")
+			def targetSegment = buildSegment(targetCompany)
+			
+			def url =  "/api/test/lookup/$sourceSegment/$targetSegment"
+			setupStub(url)
 			
 
 		when:
@@ -101,10 +103,7 @@ class PathSegmentFixtureSpockIntegrationTest extends Specification{
 	
 	
 	def "Multiple Path attributes PathSegment object"() {
-		given:
-			def url =  "/api/test/lookup/Company%201;country=PL;code=ABC1;code=ABC2;category=Soil_Type/Company2;category=Soil%20Type"
-			setupStub(url)
-			
+		given:			
 			CompanyAttributes sourceCompany = new CompanyAttributes();
 			sourceCompany.path = "Company 1"
 		
@@ -113,9 +112,16 @@ class PathSegmentFixtureSpockIntegrationTest extends Specification{
 			sourceCompany.matrixParameters.add("code","ABC2")
 			sourceCompany.matrixParameters.add("category","Soil_Type")
 			
+			def sourceSegment = buildSegment(sourceCompany)
+			
 			CompanyAttributes targetCompany = new CompanyAttributes();
 			targetCompany.path = "Company2"
 			targetCompany.matrixParameters.add("category","Soil Type")
+			
+			def targetSegment = buildSegment(targetCompany)
+			
+			def url =  "/api/test/lookup/$sourceSegment/$targetSegment"
+			setupStub(url)
 			
 
 		when:
@@ -136,5 +142,9 @@ class PathSegmentFixtureSpockIntegrationTest extends Specification{
 				.withHeader("Content-Type", MediaType.APPLICATION_JSON)
 				.withBody("get_response"))
 				)
+	}
+	
+	private String buildSegment(PathSegment segment) {
+		return PathValueReader.read(segment).replaceAll('\\s', '%20')
 	}
 }

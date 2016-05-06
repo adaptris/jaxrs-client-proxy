@@ -214,7 +214,7 @@ public class MetaDataReader implements Serializable {
 		if (entityPosition.isPresent()) {
 			EntityDescription description = entityPosition.get();
 			return Optional.of(new EntityDescription(description.getType(), args[description.getPosition()]));
-		}
+		}	
 		return entityPosition;
 	}
 

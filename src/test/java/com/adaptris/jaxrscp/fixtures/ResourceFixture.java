@@ -58,6 +58,12 @@ public interface ResourceFixture extends GenericResourceFixture<Integer, String>
 			@BeanParam Parameter paramHandler,
 			@HeaderParam("Header-2") String header2
 	);
+	@POST
+	@Path("/beanParamWithFormParams")
+	public void beanParamWithFormParams(
+			@BeanParam ParameterWithFormParams paramHandler,
+			@HeaderParam("Header-2") String header2
+	);
 	
 	@GET
 	@Path("/lookup/{sourceCompany}/{targetCompany}")
