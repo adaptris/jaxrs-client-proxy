@@ -8,6 +8,7 @@ import java.util.List;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Form;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MultivaluedHashMap;
@@ -27,11 +28,11 @@ public class ResourceHandler implements InvocationHandler{
 	private final Class<?> resourceClass;
 	private final MetaDataReaderFactory factory;
 
-	ResourceHandler(Class<?> resourceClass, WebTarget target, MultivaluedMap<String, Object> headers, MetaDataReaderFactory factory) {
+	ResourceHandler(Class<?> resourceClass, WebTarget target, MultivaluedMap<String, Object> headers) {
 		this.target = target;
 		this.headers = headers;
 		this.resourceClass = resourceClass;
-		this.factory = factory;
+		this.factory = new MetaDataReaderFactory();
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -45,14 +46,21 @@ public class ResourceHandler implements InvocationHandler{
 		request.headers(readHeaders(reader, args));
 		
 		String httpMethod = reader.readHttpMethod().or("GET");
+		Optional<Form> form = visitor.readForm(args);
 		Optional<EntityDescription> entityDescription = reader.readEntity(args);
 		Object result;
-		if (entityDescription.isPresent()) {
-			EntityDescription description = entityDescription.get();
-			Object entity = description.getValue();
-			if (description.getType() instanceof ParameterizedType) {				
-				entity = new GenericEntity(entity, description.getType());
+		if (entityDescription.isPresent() || form.isPresent()) {
+			Object entity;
+			if (form.isPresent()) {
+				entity = form.get();
+			} else {
+				EntityDescription description = entityDescription.get();
+				entity = description.getValue();
+				if (description.getType() instanceof ParameterizedType) {				
+					entity = new GenericEntity(entity, description.getType());
+				}
 			}
+			
             result = request.method(httpMethod, Entity.entity(entity, readContentType(reader)), reader.readResponseType());
 		} else {
 			result = request.method(httpMethod, reader.readResponseType());

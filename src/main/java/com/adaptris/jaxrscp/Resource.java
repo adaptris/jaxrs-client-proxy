@@ -9,15 +9,19 @@ public class Resource<T> implements AutoCloseable {
 
 	public Resource(T t, Client client) {
 		this.t = t;
-		this.client = client;		
+		this.client = client;
 	}
+
+	public Client getClient() {
+        return client;
+    }
 	
 	public T get() {
 		return t;
 	}
 	
 	@Override
-	public void close() throws Exception {
+	public void close(){
 		client.close();
 	}
 }

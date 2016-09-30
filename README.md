@@ -51,7 +51,7 @@ Now you would like to connect to resource server hosting this interface. Using t
 
 ```xml
 ...
-	<depndency>
+	<dependency>
 		<groupId>com.adaptris</groupId>
 		<artifactId>jaxrs-client-proxy</artifactId>
 		<version>${jaxrscp.version}</version>
@@ -77,10 +77,3 @@ Now you would like to connect to resource server hosting this interface. Using t
 #### What is not supported
 - `@CookieParam` annotations and no plans for supporting
 - SubResources, as for now this library only support interfaces
-- `@FormParam` - not supported yet
-- `@BeanParam` - not supported yet
-
-#### What next?
-- Exceptions handling for 4xx and 5xx statuses
-- `@FormParam` support
-- `@BeanParam` support

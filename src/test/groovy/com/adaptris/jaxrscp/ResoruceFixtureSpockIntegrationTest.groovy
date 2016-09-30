@@ -1,18 +1,18 @@
 package com.adaptris.jaxrscp
 
-import org.junit.Rule
-
-import com.adaptris.jaxrscp.fixtures.ResourceFixture;
-import com.github.tomakehurst.wiremock.junit.WireMockRule
-import com.google.common.net.HttpHeaders;
-import com.sun.security.ntlm.Client;
-
 import static com.github.tomakehurst.wiremock.client.WireMock.*
 
-import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MediaType
+
+import org.junit.Rule
 
 import spock.lang.Specification
 import spock.lang.Unroll
+
+import com.adaptris.jaxrscp.fixtures.ParameterWithFormParams;
+import com.adaptris.jaxrscp.fixtures.ResourceFixture
+import com.github.tomakehurst.wiremock.junit.WireMockRule
+import com.google.common.net.HttpHeaders
 
 @Unroll
 class ResoruceFixtureSpockIntegrationTest extends Specification{
@@ -174,6 +174,62 @@ class ResoruceFixtureSpockIntegrationTest extends Specification{
 			.withHeader("Custom-1", equalTo("a,b"))
 		)
 			
+	}
+	
+	def "Form params read from method attributes are supported"() {
+		given:
+		ResourceBuilder builder = new ResourceBuilder();
+		Resource resource = builder
+			.url("http://localhost:$PORT/api")
+			.build(ResourceFixture)
+			
+		client = resource.get();
+		
+		wireMockRule.stubFor(
+			post(urlEqualTo("/api/test/mixedFormParams/33"))
+				.willReturn(aResponse())
+		)
+		
+		when:
+		client.mixedFormParams("Form 1", 33, "Form 2")
+		
+		then:
+		verify(1,
+			postRequestedFor(urlEqualTo("/api/test/mixedFormParams/33"))
+			.withRequestBody(equalTo("form1=Form+1&form2=Form+2"))
+		)
+	}
+	
+	def "Form params read from beanparam are supported"() {
+		given:
+		ResourceBuilder builder = new ResourceBuilder();
+		Resource resource = builder
+			.url("http://localhost:$PORT/api")
+			.build(ResourceFixture)
+			
+		client = resource.get();
+		
+		wireMockRule.stubFor(
+			post(urlMatching("/api/test/beanParamWithFormParams"))
+				.willReturn(aResponse())
+		)
+		
+		def beanParam = new ParameterWithFormParams(
+			formParamA: "Form-param-a",
+			formParamB: "Form-param-b",
+			formParamC: "Form-param-c",			
+			headerParam: "HeaderParam"
+		)
+		
+		when:
+		client.beanParamWithFormParams(beanParam, "Another header parameter")
+		
+		then:
+		verify(1,
+			postRequestedFor(urlEqualTo("/api/test/beanParamWithFormParams"))
+			.withHeader("Header-2", equalTo("Another header parameter"))
+			.withRequestBody(equalTo("paramA=Form-param-a&paramB=Form-param-b&paramC=Form-param-c"))
+		)
 	}
 
 }
