@@ -17,6 +17,8 @@ public class ResourceBuilder {
 
 	private String url;
 	private MultivaluedHashMap<String, Object> headers = new MultivaluedHashMap<>();
+    private List<Class<?>> registerClasses = new ArrayList<>();
+    private List<Object> registerObjects = new ArrayList<>();
 	
 	public ResourceBuilder url(String url) {
 		this.url = url;
@@ -48,10 +50,24 @@ public class ResourceBuilder {
 		headers.put(header, new ArrayList<>(Arrays.asList(value)));
 		return this;
 	}
+
+	public void register(Class<?> register) {
+        registerClasses.add(register);
+    }
+
+    public void register(Object register) {
+        registerObjects.add(register);
+    }
 	
 	public <T> Resource<T> build(Class<T> clazz){
 		Client client = ClientBuilder.newClient();
-		WebTarget target = client.target(url);
+        for (Class<?> registerClass : registerClasses) {
+            client.register(registerClass);
+        }
+        for (Object registerObject : registerObjects) {
+            client.register(registerObject);
+        }
+        WebTarget target = client.target(url);
 		T t = ResourceHanlderFactory.newResource(clazz, target, headers);
 		return new Resource<T>(t, client);
 		

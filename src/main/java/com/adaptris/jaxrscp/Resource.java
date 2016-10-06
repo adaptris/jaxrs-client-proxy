@@ -11,10 +11,6 @@ public class Resource<T> implements AutoCloseable {
 		this.t = t;
 		this.client = client;
 	}
-
-	public Client getClient() {
-        return client;
-    }
 	
 	public T get() {
 		return t;
