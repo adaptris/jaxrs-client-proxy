@@ -15,7 +15,7 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule
 import com.google.common.net.HttpHeaders
 
 @Unroll
-class ResoruceFixtureSpockIntegrationTest extends Specification{
+class ResourceFixtureSpockIntegrationTest extends Specification{
 	
 	private static final PORT = 8089
 	
