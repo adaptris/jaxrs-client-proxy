@@ -54,16 +54,19 @@ public class ResourceBuilder {
         return this;
     }
 
-    public void register(Class<?> register) {
+    public ResourceBuilder register(Class<?> register) {
         registerClasses.add(register);
+        return this;
     }
 
-    public void register(Object register) {
+    public ResourceBuilder register(Object register) {
         registerObjects.add(register);
+        return this;
     }
 
-    public void register(InvocationHandlerInterceptor listener) {
+    public ResourceBuilder register(InvocationHandlerInterceptor listener) {
         listeners.add(listener);
+        return this;
     }
 
     public <T> Resource<T> build(Class<T> clazz) {
