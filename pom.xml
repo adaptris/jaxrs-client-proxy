@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.adaptris</groupId>
 	<artifactId>jaxrs-client-proxy</artifactId>
-	<version>1.5.2-SNAPSHOT</version>
+	<version>1.5.3-SNAPSHOT</version>
 	<name>Jax RS interfaces client proxy</name>
 	<packaging>jar</packaging>
 
