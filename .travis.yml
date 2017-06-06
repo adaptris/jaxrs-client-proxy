@@ -1,0 +1,30 @@
+language: java
+sudo: required
+dist: trusty
+
+script: mvn --batch-mode test
+
+addons:
+  apt:
+    packages:
+      - oracle-java8-installer
+      - oracle-java8-unlimited-jce-policy
+      - haveged
+
+before_install:
+  - sudo service haveged start
+
+jdk:
+  - oraclejdk8
+
+cache:
+  apt: true
+  directories:
+    - $HOME/.m2
+
+notifications:
+  email: false
+
+branches:
+  only:
+  - develop
