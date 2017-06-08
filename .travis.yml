@@ -2,7 +2,7 @@ language: java
 sudo: required
 dist: trusty
 
-script: mvn --batch-mode test
+script: mvn --batch-mode test coveralls:report
 
 addons:
   apt:

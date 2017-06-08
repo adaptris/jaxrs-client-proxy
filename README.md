@@ -1,4 +1,4 @@
-jaxrs-client-proxy [![Build Status](https://travis-ci.org/adaptris/jaxrs-client-proxy.svg?branch=develop)](https://travis-ci.org/adaptris/jaxrs-client-proxy)
+jaxrs-client-proxy [![Build Status](https://travis-ci.org/adaptris/jaxrs-client-proxy.svg?branch=develop)](https://travis-ci.org/adaptris/jaxrs-client-proxy) [![Coverage Status](https://coveralls.io/repos/github/adaptris/jaxrs-client-proxy/badge.svg)](https://coveralls.io/github/adaptris/jaxrs-client-proxy)
 ======
 The aim of the project is to provide and easy way to run your jax-rs annotated resource interfaces as an executable clients
 
